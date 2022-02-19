@@ -8,7 +8,7 @@ RUN true &&\
 \
 # Install dependencies
 apt-get update && \
-apt-get -q -y install --no-install-recommends apt-utils gnupg1 apt-transport-https dirmngr curl && \
+apt-get -q -y install --no-install-recommends apt-utils gnupg apt-transport-https dirmngr curl && \
 \
 # Install Python packages
 pip3 install pythonping influxdb && \
