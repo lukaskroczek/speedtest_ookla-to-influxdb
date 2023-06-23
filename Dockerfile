@@ -1,5 +1,5 @@
 FROM python:3.8-slim-buster
-LABEL maintainer="Team QLUSTOR <team@qlustor.com>" \
+LABEL maintainer="Lukas Kroczek" \
     description="Original by Aiden Gilmartin. Speedtest to InfluxDB data bridge"
 
 ENV DEBIAN_FRONTEND=noninteractive
