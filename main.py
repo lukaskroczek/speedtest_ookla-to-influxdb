@@ -27,19 +27,20 @@ SERVER_ID = os.getenv('SPEEDTEST_SERVER_ID', '')
 # Time between ping tests (in seconds).
 PING_INTERVAL = int(os.getenv('PING_INTERVAL', '5'))
 
-influxdb_client = InfluxDBClient(
-    DB_ADDRESS, DB_PORT, DB_USER, DB_PASSWORD, None)
-
+influxdb_client = None
 
 def init_db():
-    databases = influxdb_client.get_list_database()
-
-    if len(list(filter(lambda x: x['name'] == DB_DATABASE, databases))) == 0:
-        influxdb_client.create_database(
-            DB_DATABASE)  # Create if does not exist.
+    try:
+        influxdb_client = InfluxDBClient(DB_ADDRESS, DB_PORT, DB_USER, DB_PASSWORD, None)
+        databases = influxdb_client.get_list_database()
+    except:
+        logger("Error", "Unable to get list of databases")
+        raise RuntimeError("No DB connection") from error
     else:
-        # Switch to if does exist.
-        influxdb_client.switch_database(DB_DATABASE)
+        if len(list(filter(lambda x: x['name'] == DB_DATABASE, databases))) == 0:
+            influxdb_client.create_database(DB_DATABASE)  # Create if does not exist.
+        else:
+            influxdb_client.switch_database(DB_DATABASE) # Switch to if does exist.
 
 
 def pkt_loss(data):
