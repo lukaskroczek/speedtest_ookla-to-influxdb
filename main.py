@@ -178,6 +178,19 @@ def speedtest():
         print(speedtest.stdout)
 #        time.sleep(TEST_FAIL_INTERVAL)
 
+def create_fields(result):
+    if result._responses[0].error_message is None:
+        return {
+            'success': 1,
+            'round_trip_time_max': result.rtt_avg_ms,
+            'round_trip_time_min': result.rtt_min_ms,
+            'round_trip_time_avg': result.rtt_avg_ms
+        }
+
+    return {
+        'success': 0
+    }
+
 
 def pingtest():
     timestamp = datetime.datetime.utcnow()
@@ -192,10 +205,7 @@ def pingtest():
                     'namespace': NAMESPACE,
                     'target' : target
                 },
-                'fields': {
-                    'success' : int(pingtest._responses[0].error_message is None),
-                    'rtt': float(0 if pingtest._responses[0].error_message is not None else pingtest.rtt_avg_ms)
-                }
+                'fields': create_fields(pingtest)
             }
         ]
         if influxdb_client.write_points(data) == True:
