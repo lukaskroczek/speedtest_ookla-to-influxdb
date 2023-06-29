@@ -32,10 +32,11 @@ influxdb_client = None
 def init_db():
     print('DB Init started...')
     try:
-        super.influxdb_client = InfluxDBClient(DB_ADDRESS, DB_PORT, DB_USER, DB_PASSWORD, None)
+        global influxdb_client
+        influxdb_client = InfluxDBClient(DB_ADDRESS, DB_PORT, DB_USER, DB_PASSWORD, None)
         databases = influxdb_client.get_list_database()
     except:
-        logger("Error", "Unable to get list of databases")
+        print("Error", "Unable to get list of databases")
         raise RuntimeError("No DB connection") from error
     else:
         if len(list(filter(lambda x: x['name'] == DB_DATABASE, databases))) == 0:
