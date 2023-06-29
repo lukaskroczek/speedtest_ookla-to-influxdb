@@ -30,8 +30,9 @@ PING_INTERVAL = int(os.getenv('PING_INTERVAL', '5'))
 influxdb_client = None
 
 def init_db():
+    print('DB Init started...')
     try:
-        influxdb_client = InfluxDBClient(DB_ADDRESS, DB_PORT, DB_USER, DB_PASSWORD, None)
+        super.influxdb_client = InfluxDBClient(DB_ADDRESS, DB_PORT, DB_USER, DB_PASSWORD, None)
         databases = influxdb_client.get_list_database()
     except:
         logger("Error", "Unable to get list of databases")
@@ -41,6 +42,7 @@ def init_db():
             influxdb_client.create_database(DB_DATABASE)  # Create if does not exist.
         else:
             influxdb_client.switch_database(DB_DATABASE) # Switch to if does exist.
+        print('DB Init successful')
 
 
 def pkt_loss(data):
